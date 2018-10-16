@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Transfer Show</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1>Transfer</h1>
+<p th:text="'userId: ' + ${user.userId}"/>
+<p th:text="'success: ' + ${user.success}"/>
+<p th:text="'txId: ' + ${user.txId}"/>
+<p th:text="'merchantTxId: ' + ${user.merchantTxId}"/>
+<p th:text="'errCode: ' + ${user.errCode}"/>
+<p th:text="'errMsg: ' + ${user.errMsg}"/>
+
+<a href="/paymentiq/cancelPage">To cancel page</a>
+
+</body>
+</html>

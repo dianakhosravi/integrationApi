@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1>Authorization</h1>
+<p th:text="'userId: ' + ${user.userId}"/>
+<p th:text="'success: ' + ${!user.success}" style="color: crimson"/>
+<p th:text="'txId: ' + ${user.txId}"/>
+<p th:text="'merchantTxId: ' + ${user.merchantTxId}"/>
+<p th:text="'authCode: ' + ${user.authCode}"/>
+<p th:text="'errCode: ' + ${user.errCode}" style="color: crimson"/>
+<p th:text="'errMsg: ' + ${user.errMsg}" style="color: crimson"/>
+
+<a href="/paymentiq/transferShow">TransferShow</a>
+
+</body>
+</html>
