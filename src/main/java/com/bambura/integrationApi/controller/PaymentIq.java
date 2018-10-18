@@ -1,8 +1,10 @@
 package com.bambura.integrationApi.controller;
 
+import com.bambura.integrationApi.Dao.AccountDao;
+import com.bambura.integrationApi.Dao.UserDao;
 import com.bambura.integrationApi.exception.UserNotFoundException;
-import com.bambura.integrationApi.model.User;
-import com.bambura.integrationApi.service.UserService;
+import com.bambura.integrationApi.model.*;
+import com.bambura.integrationApi.service.IntegrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,13 +13,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping(value = "/paymentiq")
-public class UserController {
+public class PaymentIq {
     @Autowired
-    UserService userService;
+    IntegrationService integrationService;
 
-    User user;
+    @Autowired
+    AccountDao accountDao;
+
 
     @GetMapping("/verifyuser")
     public String verifyForm(Model model) {
@@ -27,49 +33,32 @@ public class UserController {
 
     @PostMapping("/verifyuser")
     public String verifySubmit(Model model, @RequestParam String sessionId, @RequestParam String userId) throws UserNotFoundException {
-        user = userService.verifyUser(sessionId, userId);
-        if (user.isSuccess() == false) {
-            user.setErrMsg("Transaction failed");
-            user.setErrCode(210003);
-        }
-        model.addAttribute("user", user);
+
+        model.addAttribute("verify", OperatorPlatform.verify(sessionId,userId));
         return "verification";
     }
 
     @GetMapping("/authorizationShow")
     public String authorizationShow(Model model) {
-        model.addAttribute("user", user);
+        model.addAttribute("user", User.builder().build());
         return "authorizationShow";
     }
 
     @PostMapping("/authorize")
-    public String authorize(Model model, @RequestParam Double txAmount, @RequestParam String txAmountCy) {
+    public String authorize(Model model, @RequestParam Double txAmount, @RequestParam String txAmountCy, @RequestParam String accountId) {
 
 
-        if (txAmountCy.equalsIgnoreCase("SEK")) {
-            if (user.getBalance().doubleValue() + txAmount > 0) {
-                user.setTxAmount(txAmount);
-                user.setBalance(user.getBalance().doubleValue() + txAmount);
-            } else {
-                user.setTxAmount(txAmount);
-                user.setBalance(user.getBalance().doubleValue() + txAmount);
-                user.setErrMsg("Authorization failed");
-                user.setErrCode(10001);
-            }
-        } else {
-            user.setErrMsg("Authorization failed");
-            user.setErrCode(10001);
-        }
-        model.addAttribute("user", user);
+       // model.addAttribute("user", user);
         return "authorization";
     }
 
     @GetMapping("/transferShow")
     public String transferShow(Model model) {
-        model.addAttribute("user", user);
+        model.addAttribute("user", User.builder().build());
         return "transferShow";
     }
 
+/*
 
     @PostMapping("/transfer")
     public String transfer(Model model, @RequestParam Double fee,
@@ -103,5 +92,6 @@ public class UserController {
         return "cancel";
     }
 
+*/
 
 }

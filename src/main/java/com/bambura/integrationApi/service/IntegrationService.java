@@ -1,15 +1,11 @@
 package com.bambura.integrationApi.service;
 
 import com.bambura.integrationApi.Dao.*;
-import com.bambura.integrationApi.exception.UserNotFoundException;
 import com.bambura.integrationApi.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 @Service
 public class IntegrationService {
@@ -18,19 +14,10 @@ public class IntegrationService {
     UserDao userDao;
     @Autowired
     AccountDao accountDao;
-    @Autowired
-    AuthorizeDao authorizeDao;
-    @Autowired
-    TransactionDao transactionDao;
-    @Autowired
-    TransactionsDao transactionsDao;
-    @Autowired
-    TransferDao transferDao;
-
 
     public void initialRepository() {
 
-        User user =User.builder()
+        User user = User.builder()
                 .city("Stockholm")
                 .country("SWE")
                 .dob("1981-01-01")
@@ -58,6 +45,7 @@ public class IntegrationService {
 
         accountDao.save(account);
 
+        /*
         authorizeDao.save(Authorize.builder()
                 .authCode("550e8400-e29b-41d4-a716-446655440000")
                 .user(user)
@@ -97,11 +85,9 @@ public class IntegrationService {
                 .account(account)
                 .build()
         );
+*/
 
     }
-
-
-
 
 
 }

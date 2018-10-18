@@ -11,13 +11,13 @@ import java.util.List;
 @Entity
 @Builder
 @Data
-public class Transactions  {
+public class Transactions {
 
     @Id
     @GeneratedValue
     private String id;
     private User user;
-    private List<Transaction> transactions ;
+    private List<Transaction> transactions;
 
 
 }
