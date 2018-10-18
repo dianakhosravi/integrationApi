@@ -15,6 +15,7 @@ public class Transaction {
     private String errMsg;
     private Double fee;
     private String feeCy;
+    private String kycStatus;
     private Number merchantTxId;
     private Boolean success;
     private Double txAmount;

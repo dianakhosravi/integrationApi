@@ -6,18 +6,17 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.List;
 
 @Entity
-@Builder
 @Data
-public class Transactions  {
+@Builder
+public class Transfer {
 
     @Id
     @GeneratedValue
     private String id;
     private User user;
-    private List<Transaction> transactions ;
-
+    private Transaction transaction;
+    private Account account;
 
 }

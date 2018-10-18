@@ -15,9 +15,9 @@ public class Account {
     @Id
     private String accountId;
     private Double balance;
+    private String balanceCy;
     private String provider;
-    private String txAmountCy;
-    private String txName;
+    private User user;
 
 
 }
