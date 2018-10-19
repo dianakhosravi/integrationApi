@@ -33,6 +33,7 @@ public class IntegrationService {
                     .zip("177 32")
                     .build();
             userDao.save(user);
+        System.out.println(" user is made ");
 
             Account account = Account.builder()
                     .accountHolder("John")
@@ -42,8 +43,9 @@ public class IntegrationService {
                     .provider("Neteller")
                     .user(user)
                     .build();
-
             accountDao.save(account);
+
+        System.out.println(" account is made ");
         }
    }
 

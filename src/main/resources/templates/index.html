@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Zalando</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1>Product</h1>
+
+<form action="#" th:action="@{/paymentiq/verifyuser}" th:object="${user}" method="post">
+    <p>sessionId: <input type="text" th:field="*{sessionId}"/></p>
+    <p>userId: <input type="text" th:field="*{userId}"/></p>
+    <p><input type="submit" value="Submit"/></p>
+</form>
+</body>
+</html>

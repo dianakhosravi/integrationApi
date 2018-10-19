@@ -17,6 +17,7 @@ public class User {
     private String dob;
     private String email;
     private String firstName;
+    private String kycStatus;
     private String lastName;
     private String locale;
     private String mobile;

@@ -2,18 +2,20 @@ package com.bambura.integrationApi.controller;
 
 import com.bambura.integrationApi.Dao.AccountDao;
 import com.bambura.integrationApi.Dao.UserDao;
-import com.bambura.integrationApi.exception.UserNotFoundException;
-import com.bambura.integrationApi.model.*;
+import com.bambura.integrationApi.model.Account;
+import com.bambura.integrationApi.model.User;
+import com.bambura.integrationApi.model.Verify;
 import com.bambura.integrationApi.service.IntegrationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/paymentiq")
@@ -24,31 +26,51 @@ public class PaymentIq {
     @Autowired
     AccountDao accountDao;
 
+    @Autowired
+    private UserDao userDao;
 
-    @GetMapping("/verifyuser")
-    public String verifyForm(Model model) {
-        model.addAttribute("user", User.builder().build());
-        return "user";
-    }
+    @Autowired
+    OperatorPlatform operatorPlatform;
 
     @PostMapping("/verifyuser")
-    public String verifySubmit(Model model, @RequestParam String sessionId, @RequestParam String userId) throws UserNotFoundException {
+    public ResponseEntity verifySubmit(String sessionId, String userId) {
 
-        model.addAttribute("verify", OperatorPlatform.verify(sessionId,userId));
-        return "verification";
-    }
+        Verify verify = operatorPlatform.verify(sessionId, userId);
 
-    @GetMapping("/authorizationShow")
-    public String authorizationShow(Model model) {
-        model.addAttribute("user", User.builder().build());
-        return "authorizationShow";
+        if (verify.getSuccess() == true) {
+
+            User user = userDao.findById(userId).get();
+            Account account = accountDao.findAll().stream()
+                    .filter(c->c.getUser().getUserId().equalsIgnoreCase(user.getUserId()))
+                    .findAny().get();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("userId",user.getUserId());
+            headers.add("userCat",user.getUserCat());
+            headers.add("kycStatus;",user.getKycStatus());
+            headers.add("firstName",user.getFirstName());
+            headers.add("lastName",user.getLastName());
+            headers.add("street",user.getStreet());
+            headers.add("zip",user.getZip());
+            headers.add("country",user.getCountry());
+            headers.add("email",user.getEmail());
+            headers.add("mobile",user.getMobile());
+            headers.add("dob",user.getDob());
+            headers.add("balance",account.getBalance().toString());
+            headers.add("balanceCy",account.getBalanceCy());
+            headers.add("local",user.getLocale());
+            return new ResponseEntity(headers, HttpStatus.OK);
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("status","false");
+        headers.add("errCode","123");
+        headers.add("errMsg","Unknown userId");
+        return new ResponseEntity(headers, HttpStatus.OK);
     }
 
     @PostMapping("/authorize")
     public String authorize(Model model, @RequestParam Double txAmount, @RequestParam String txAmountCy, @RequestParam String accountId) {
-
-
-       // model.addAttribute("user", user);
+        // model.addAttribute("user", user);
         return "authorization";
     }
 
