@@ -19,7 +19,7 @@ public class Account {
     private String balanceCy;
     private String provider;
     @OneToOne
-    private String userId;
+    private User user;
 
 }
 

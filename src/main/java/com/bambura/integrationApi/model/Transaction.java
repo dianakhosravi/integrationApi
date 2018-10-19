@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 public class Transaction {
 
     @ManyToOne
-    private String accountId;
+    private Account account;
     private Number errCode;
     private String errMsg;
     private Double fee;

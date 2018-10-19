@@ -26,7 +26,6 @@ public class User {
     private String sessionId;
     private String userCat;
     @Id
-    @GeneratedValue
     private String userId;
     private String zip;
 
