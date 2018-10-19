@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Data
 @Builder
@@ -17,8 +18,8 @@ public class Account {
     private Double balance;
     private String balanceCy;
     private String provider;
-    private User user;
-
+    @OneToOne
+    private String userId;
 
 }
 

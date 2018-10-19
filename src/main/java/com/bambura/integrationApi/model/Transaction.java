@@ -5,12 +5,15 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Data
 @Builder
 @Entity
 public class Transaction {
 
+    @ManyToOne
+    private String accountId;
     private Number errCode;
     private String errMsg;
     private Double fee;
@@ -22,10 +25,12 @@ public class Transaction {
     private String txAmountCy;
     @Id
     private String txId;
-    private String txName;
     private Double txPspAmount;
     private String txPspAmountCy;
     private String txRefId;
+    // Id = 101 is txTypeName=creditDeposite
     private int txTypeId;
+    private String txTypeName;
+    private TransactionResultType transactionResultType;
 
 }

@@ -11,6 +11,7 @@ import javax.persistence.Id;
 @Entity
 @Builder
 public class User {
+
     private String city;
     private String country;
     private String dob;
@@ -21,6 +22,7 @@ public class User {
     private String mobile;
     private Sex sex;
     private String street;
+    //TODO: Where should be sessionId!!!
     private String sessionId;
     private String userCat;
     @Id
