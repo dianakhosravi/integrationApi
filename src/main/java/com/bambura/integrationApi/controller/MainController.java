@@ -14,4 +14,6 @@ public class MainController {
     public ModelAndView startApp(@ModelAttribute User user){
         return new ModelAndView("index.html");
     }
+
+
 }
