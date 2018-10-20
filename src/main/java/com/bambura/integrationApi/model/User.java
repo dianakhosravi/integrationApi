@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Data
@@ -21,7 +20,7 @@ public class User {
     private String lastName;
     private String locale;
     private String mobile;
-    private Sex sex;
+    private Gender gender;
     private String street;
     //TODO: Where should be sessionId!!!
     private String sessionId;

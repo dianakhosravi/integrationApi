@@ -1,5 +1,5 @@
 package com.bambura.integrationApi.model;
 
-public enum Sex {
+public enum Gender {
     MALE, FEMALE, UNKNOWN
 }
