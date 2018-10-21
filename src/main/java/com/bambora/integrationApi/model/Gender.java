@@ -1,4 +1,4 @@
-package com.bambura.integrationApi.model;
+package com.bambora.integrationApi.model;
 
 public enum Gender {
     MALE, FEMALE, UNKNOWN

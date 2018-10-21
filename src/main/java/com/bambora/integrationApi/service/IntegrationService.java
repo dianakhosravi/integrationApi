@@ -1,9 +1,9 @@
-package com.bambura.integrationApi.service;
+package com.bambora.integrationApi.service;
 
-import com.bambura.integrationApi.Dao.AccountDao;
-import com.bambura.integrationApi.Dao.TransactionDao;
-import com.bambura.integrationApi.Dao.UserDao;
-import com.bambura.integrationApi.model.*;
+import com.bambora.integrationApi.Dao.AccountDao;
+import com.bambora.integrationApi.Dao.TransactionDao;
+import com.bambora.integrationApi.Dao.UserDao;
+import com.bambora.integrationApi.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,11 +63,11 @@ public class IntegrationService {
                 .zip("177 32")
                 .build();
         userDao.save(user);
-        System.out.println(" user is made ");
+
 
         Account account = Account.builder()
                 .accountHolder("John")
-                .accountId("dd14cb2d-623f-46a9-9210-beb8d1f033c9.")
+                .accountId("dd14cb2d-623f-46a9-9210-beb8d1f033c9")
                 .balance(100.5)
                 .balanceCy("SEK")
                 .provider("Neteller")
@@ -75,13 +75,26 @@ public class IntegrationService {
                 .build();
         accountDao.save(account);
 
-        System.out.println(" account is made ");
     }
 
     public Transaction saveTransaction(Transaction transaction) {
         return (transaction != null) ?
                 transactionDao.save(transaction)
-                :null;
+                : null;
     }
+
+    public Transaction getTransactionById(String txId) {
+        return (txId != null) ?
+                transactionDao.findById(txId).get()
+                : null;
+    }
+
+    public Account getAccountById(String accountId) {
+        return (accountId != null) ?
+                accountDao.findById(accountId).get()
+                : null;
+    }
+
+
 }
 

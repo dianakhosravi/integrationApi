@@ -1,6 +1,6 @@
-package com.bambura.integrationApi.Dao;
+package com.bambora.integrationApi.Dao;
 
-import com.bambura.integrationApi.model.User;
+import com.bambora.integrationApi.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

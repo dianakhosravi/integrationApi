@@ -1,9 +1,8 @@
-package com.bambura.integrationApi.controller;
+package com.bambora.integrationApi.controller;
 
-import com.bambura.integrationApi.model.*;
-import com.bambura.integrationApi.service.IntegrationService;
+import com.bambora.integrationApi.model.*;
+import com.bambora.integrationApi.service.IntegrationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +15,12 @@ import java.util.UUID;
 
 @Controller
 public class MerchantController {
+
+    static Double sumOfTxAmount = 0.0;
+
     @Autowired
     IntegrationService integrationService;
-
+    @Autowired
     Transaction transaction;
 
     @PostMapping("/verifyuser")
@@ -54,50 +56,70 @@ public class MerchantController {
         return new ResponseEntity(headers, HttpStatus.OK);
     }
 
-    Double sumOfTxAmount = 0.0;
-    @PostMapping("/paymentiq/authorize")
+    @PostMapping("/authorize")
     public ResponseEntity authorize(@RequestBody Authorize authorize) {
         ResponseEntity responseEntity;
         UUID uuid = UUID.randomUUID();
-        User user = integrationService.findUserById(authorize.getUserId());
-        Account account = integrationService.getAccountByUserId(authorize.getUserId());
+        Account account = integrationService.getAccountById(authorize.getAccountId());
 
-        Transaction transaction = Transaction.builder()
-                .account(account)
-                .authCode(uuid.toString())
-                .merchantTxId(111111111)
-                .provider(authorize.getProvider())
-                .txAmount(authorize.getTxAmount())
-                .txAmountCy(authorize.getTxAmountCy())
-                .txId(authorize.getTxId())
-                .txTypeId(authorize.getTxTypeId())
-                .txTypeName(authorize.getTxTypeName())
-                .build();
 
         sumOfTxAmount += authorize.getTxAmount();
 
-        if (account.getBalance() - sumOfTxAmount > 0) {
+        if (account.getBalance() - sumOfTxAmount >= 0) {
+
+            transaction = Transaction.builder()
+                    .account(account)
+                    .authCode(uuid.toString())
+                    .merchantTxId(111111111)
+                    .provider(authorize.getProvider())
+                    .txAmount(authorize.getTxAmount())
+                    .txAmountCy(authorize.getTxAmountCy())
+                    .txId(authorize.getTxId())
+                    .txTypeId(authorize.getTxTypeId())
+                    .txTypeName(authorize.getTxTypeName())
+                    .build();
+
+            //integrationService.saveTransaction(transaction);
+
             HttpHeaders headers = new HttpHeaders();
+
             headers.add("userId", authorize.getUserId());
             headers.add("success", "true");
             headers.add("txId", authorize.getTxId());
-            headers.add("merchantTxId","111111111");
-            headers.add("authCode",uuid.toString());
+            headers.add("merchantTxId", "111111111");
+            headers.add("authCode", uuid.toString());
+
             responseEntity = new ResponseEntity(headers, HttpStatus.OK);
-            transaction.setSuccess(true);
-        }else{
+
+        } else {
+
             HttpHeaders headers = new HttpHeaders();
             headers.add("status", "false");
             headers.add("errCode", "10001");
             headers.add("errMsg", "Authorize failed");
-            headers.add("authCode",uuid.toString());
+            headers.add("authCode", uuid.toString());
             responseEntity = new ResponseEntity(headers, HttpStatus.OK);
-            transaction.setErrCode(10001);
-            transaction.setErrMsg("Authorize failed");
-            transaction.setSuccess(false);
         }
-        integrationService.saveTransaction(transaction);
+
         return responseEntity;
+    }
+
+    @PostMapping("/transfer")
+    public void transfer(@RequestBody Transfer transfer) {
+        //Transaction transaction = integrationService.getTransactionById(transfer.getTxId());
+        transaction.setSuccess(true);
+        integrationService.saveTransaction(transaction);
+
+        sumOfTxAmount += transaction.getTxAmount();
+
+    }
+
+    @PostMapping("/cancel")
+    public void cancel(@RequestBody Transfer transfer) {
+        Transaction transaction = integrationService.getTransactionById(transfer.getTxId());
+        transaction.setErrCode(111111);
+        transaction.setErrMsg("Transfer failed");
+        transaction.setSuccess(false);
     }
 
 }

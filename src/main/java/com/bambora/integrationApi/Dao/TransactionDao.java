@@ -1,6 +1,6 @@
-package com.bambura.integrationApi.Dao;
+package com.bambora.integrationApi.Dao;
 
-import com.bambura.integrationApi.model.Transaction;
+import com.bambora.integrationApi.model.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

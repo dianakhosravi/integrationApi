@@ -1,4 +1,4 @@
-package com.bambura.integrationApi.model;
+package com.bambora.integrationApi.model;
 
 import lombok.Builder;
 import lombok.Data;

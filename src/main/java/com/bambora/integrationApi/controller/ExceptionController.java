@@ -1,6 +1,6 @@
-package com.bambura.integrationApi.controller;
+package com.bambora.integrationApi.controller;
 
-import com.bambura.integrationApi.exception.UserNotFoundException;
+import com.bambora.integrationApi.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

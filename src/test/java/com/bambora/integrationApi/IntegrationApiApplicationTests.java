@@ -1,4 +1,4 @@
-package com.bambura.integrationApi;
+package com.bambora.integrationApi;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,4 +1,4 @@
-package com.bambura.integrationApi.model;
+package com.bambora.integrationApi.model;
 
 import lombok.Builder;
 import lombok.Data;
@@ -7,6 +7,7 @@ import lombok.Data;
 @Builder
 public class Authorize {
 
+    private String accountId;
     private String userId;
     private Double txAmount;
     private String txAmountCy;
