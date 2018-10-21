@@ -78,6 +78,53 @@ public class IntegrationService {
                 .build();
         accountDao.save(account);
 
+        double buy1= 50.00;
+        double buy2= 60.00;
+        double buy3= 10.00;
+        double buy4= 5.00;
+
+        transactionDao.save(Transaction.builder()
+                .account(account)
+                .txAmount(buy1)
+                .currentBalance(account.getBalance()-buy1)
+                .txAmountCy("SEK")
+                .txId("12345")
+                .build()
+        );
+        account.setBalance(account.getBalance()-buy1);
+
+        transactionDao.save(Transaction.builder()
+                .account(account)
+                .txAmount(buy2)
+                .currentBalance(account.getBalance()-buy2)
+                .txId("12346")
+                .txAmountCy("SEK")
+                .build()
+        );
+        account.setBalance(account.getBalance()-buy2);
+
+        transactionDao.save(Transaction.builder()
+                .account(account)
+                .txAmount(buy3)
+                .txAmountCy("SEK")
+                .currentBalance(account.getBalance()-buy3)
+                .txId("12347")
+                .build()
+        );
+        account.setBalance(account.getBalance()-buy3);
+
+        transactionDao.save(Transaction.builder()
+                .account(account)
+                .txAmount(buy4)
+                .currentBalance(account.getBalance()-buy4)
+                .txId("12348")
+                .txAmountCy("SEK")
+                .build()
+        );
+        account.setBalance(account.getBalance()-buy4);
+
+
+
     }
 
     public Transaction saveTransaction(Transaction transaction) {

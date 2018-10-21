@@ -2,21 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html;
-   charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
-    <link href="/webjars/materializecss/0.96.0/css/materialize.css"
-          type="text/css" rel="stylesheet" media="screen,projection"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css"
-          integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
-    <title>TRANSACTION</title>
-
+    <link href="/webjars/materializecss/0.96.0/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+    <title>Transaction</title>
 </head>
 
 <body>
 
     <div class="container">
         <h5 class="center-align" style="color: lightseagreen; padding-top: 20px; padding-bottom: 30px">Your Transaction</h5>
+        <h5 class="center-align" style="color: lightseagreen; padding-top: 20px; padding-bottom: 30px" th:text="${transactions.get(0).getAccount().balance}">Balance</h5>
+
         <table class="striped bordered centered">
             <thead>
             <tr>
@@ -35,23 +33,25 @@
             </thead>
 
             <tr th:each="transaction : ${transactions}">
-                <!--  <td th:text="${transaction.getAccount().getAccountId()}">accountId</td>
-                  <td th:text="${transaction.getAuthCode()}">AuthCode</td>
-                  <td th:text="${transaction.getMerchantTxId()}">merchantTxId</td>
-                  <td th:text="${transaction.getProvider()}">provider</td>
-                  <td th:text="${transaction.getTxId()}">txId</td>
-                  <td th:text="${transaction.getTxAmount()}">txAmount</td>
-                  <td th:text="${transaction.getTxAmountCy()}">txAmountCy</td>
-                  <td th:text="${transaction.getTxTypeId()}">txTypeId</td>
-                  <td th:text="${transaction.getTxTypeName()}">txTypeName</td>
-                  <td th:text="${transaction.getCurrentBalance()}">balance</td>-->
+                <td th:text="${transaction.getAccount().getAccountId()}">accountId</td>
+                <td th:text="${transaction.getAuthCode()}">AuthCode</td>
+                <td th:text="${transaction.getMerchantTxId()}">merchantTxId</td>
+                <td th:text="${transaction.getProvider()}">provider</td>
+                <td th:text="${transaction.getTxId()}">txId</td>
+                <td th:text="${transaction.getTxAmount()}">txAmount</td>
+                <td th:text="${transaction.getTxAmountCy()}">txAmountCy</td>
+                <td th:text="${transaction.getTxTypeId()}">txTypeId</td>
+                <td th:text="${transaction.getTxTypeName()}">txTypeName</td>
+                <td th:text="${transaction.getCurrentBalance()}">balance</td>
             </tr>
 
         </table>
-        <br>
-<!--
-        <button value="back" class="button" th:href="/">back</button>
--->
+    </div>
+    <br/>
+    <br/>
+
+    <div class="container left-align">
+        <a href="/restricted" class="btn btn-primary center-align" th:href="@{/}">Back</a>
     </div>
 
     <script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>

@@ -66,7 +66,6 @@ public class MerchantController {
         UUID uuid = UUID.randomUUID();
         Account account = integrationService.getAccountById(authorize.getAccountId());
 
-
         sumOfTxAmount += authorize.getTxAmount();
 
         if (account.getBalance() - sumOfTxAmount >= 0) {
