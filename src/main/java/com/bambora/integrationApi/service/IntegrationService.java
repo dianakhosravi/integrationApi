@@ -7,7 +7,10 @@ import com.bambora.integrationApi.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class IntegrationService {
@@ -96,5 +99,12 @@ public class IntegrationService {
     }
 
 
+    public List<Transaction> getAllTransactionsByUserId(String userId) {
+        return (userId != null) ?
+                transactionDao.findAll().stream()
+                        .filter(c -> c.getAccount().getUser().getUserId().equalsIgnoreCase(userId))
+                        .collect(Collectors.toList())
+                : null;
+    }
 }
 

@@ -20,6 +20,7 @@ public class Transaction {
     @ManyToOne
     private Account account;
     private String authCode;
+    private Double currentBalance;
     private Number errCode;
     private String errMsg;
     private Double fee;

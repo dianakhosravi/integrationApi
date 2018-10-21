@@ -7,10 +7,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -105,13 +109,25 @@ public class MerchantController {
     }
 
     @PostMapping("/transfer")
-    public void transfer(@RequestBody Transfer transfer) {
+    public String transfer(Model model , @RequestBody Transfer transfer) {
         //Transaction transaction = integrationService.getTransactionById(transfer.getTxId());
         transaction.setSuccess(true);
+        transaction.setCurrentBalance(transaction.getAccount().getBalance());
         integrationService.saveTransaction(transaction);
 
         sumOfTxAmount += transaction.getTxAmount();
+        model.addAttribute("succeed",true);
+        return "index";
+    }
 
+    @GetMapping("/transactionsShow")
+    public ModelAndView transactionsShow(){
+        List<Transaction> transactions = integrationService.getAllTransactionsByUserId("user_123");
+
+        ModelAndView modelAndView = new ModelAndView("transactionList");
+
+        modelAndView.addObject("transactions",transactions);
+        return modelAndView;
     }
 
     @PostMapping("/cancel")

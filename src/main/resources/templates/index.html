@@ -1,16 +1,34 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Zalando</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-</head>
-<body>
-<h1>Product</h1>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-<form action="#" th:action="@{/paymentiq/verifyuser}" th:object="${user}" method="post">
-    <p>sessionId: <input type="text" th:field="*{sessionId}"/></p>
-    <p>userId: <input type="text" th:field="*{userId}"/></p>
-    <p><input type="submit" value="Pay"/></p>
-</form>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;
+   charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <link href="/webjars/materializecss/0.96.0/css/materialize.css"
+          type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css"
+          integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+    <title>index</title>
+</head>
+
+<body>
+<div class="container center-align show-on-small">
+    <h2>Main page</h2>
+    <form action="#" th:action="@{/verifyuser}" th:object="${user}" method="post">
+        <p>sessionId: <input type="text" th:field="*{sessionId}"/></p>
+        <p>userId: <input type="text" th:field="*{userId}"/></p>
+        <p><input type="submit" value="Pay"/></p>
+    </form>
+</div>
+
+</br>
+<div class="container left-align">
+    <a href="/restricted" class="btn btn-primary" th:href="@{/transactionsShow}">Show Transactions</a>
+</div>
+
+<script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+
 </body>
 </html>
