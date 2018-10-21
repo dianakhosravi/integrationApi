@@ -7,7 +7,6 @@ import com.bambora.integrationApi.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,7 +70,7 @@ public class IntegrationService {
         Account account = Account.builder()
                 .accountHolder("John")
                 .accountId("dd14cb2d-623f-46a9-9210-beb8d1f033c9")
-                .balance(100.5)
+                .balance(300.5)
                 .balanceCy("SEK")
                 .provider("Neteller")
                 .user(user)
@@ -123,7 +122,7 @@ public class IntegrationService {
         );
         account.setBalance(account.getBalance()-buy4);
 
-
+        accountDao.save(account);
 
     }
 
@@ -152,6 +151,12 @@ public class IntegrationService {
                         .filter(c -> c.getAccount().getUser().getUserId().equalsIgnoreCase(userId))
                         .collect(Collectors.toList())
                 : null;
+    }
+
+    public User getUserById(String userId) {
+        return (userId != null)?
+                userDao.findById(userId).get()
+                :null;
     }
 }
 

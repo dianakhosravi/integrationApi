@@ -103,7 +103,6 @@ public class MerchantController {
             headers.add("authCode", uuid.toString());
             responseEntity = new ResponseEntity(headers, HttpStatus.OK);
         }
-
         return responseEntity;
     }
 
@@ -126,6 +125,8 @@ public class MerchantController {
         ModelAndView modelAndView = new ModelAndView("transactionList");
 
         modelAndView.addObject("transactions",transactions);
+        modelAndView.addObject("firstName",integrationService.getUserById("user_123").getFirstName());
+        modelAndView.addObject("balance",integrationService.getAccountByUserId("user_123").getBalance());
         return modelAndView;
     }
 

@@ -12,8 +12,8 @@
 <body>
 
     <div class="container">
-        <h5 class="center-align" style="color: lightseagreen; padding-top: 20px; padding-bottom: 30px">Your Transaction</h5>
-        <h5 class="center-align" style="color: lightseagreen; padding-top: 20px; padding-bottom: 30px" th:text="${transactions.get(0).getAccount().balance}">Balance</h5>
+        <h5 class="center-align" style="color: lightseagreen; padding-top: 40px; padding-bottom: 5px" th:text="'Hello '+${firstName}">firstName</h5>
+        <h5 class="center-align" style="color: lightseagreen; padding-top: 5px; padding-bottom: 30px" th:text="'Your balance is:  '+${balance} ">Balance</h5>
 
         <table class="striped bordered centered">
             <thead>
