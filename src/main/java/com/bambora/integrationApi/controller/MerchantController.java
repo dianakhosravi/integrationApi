@@ -3,15 +3,12 @@ package com.bambora.integrationApi.controller;
 import com.bambora.integrationApi.model.*;
 import com.bambora.integrationApi.service.IntegrationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -27,7 +24,9 @@ public class MerchantController {
     @Autowired
     Transaction transaction;
 
-    @PostMapping("/verifyuser")
+    @RequestMapping(method = RequestMethod.POST, value = "/verifyuser")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
     public ResponseEntity checkUser(@RequestParam String userId, @RequestParam String sessionId) {
 
         Verify verify = integrationService.verify(sessionId, userId);
@@ -60,9 +59,11 @@ public class MerchantController {
         return new ResponseEntity(headers, HttpStatus.OK);
     }
 
-    @PostMapping("/authorize")
-    public ResponseEntity authorize(@RequestBody Authorize authorize) {
-        ResponseEntity responseEntity;
+    @RequestMapping(method = RequestMethod.POST, value = "/authorize")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public AuthorizeResponse authorize(@RequestBody Authorize authorize) {
+        AuthorizeResponse authorizeResponse;
         UUID uuid = UUID.randomUUID();
         Account account = integrationService.getAccountById(authorize.getAccountId());
 
@@ -84,58 +85,70 @@ public class MerchantController {
 
             //integrationService.saveTransaction(transaction);
 
-            HttpHeaders headers = new HttpHeaders();
-
+/*            HttpHeaders headers = new HttpHeaders();
             headers.add("userId", authorize.getUserId());
             headers.add("success", "true");
             headers.add("txId", authorize.getTxId());
             headers.add("merchantTxId", "111111111");
             headers.add("authCode", uuid.toString());
-
-            responseEntity = new ResponseEntity(headers, HttpStatus.OK);
-
+            responseEntity = new ResponseEntity(headers, HttpStatus.OK);*/
+            authorizeResponse = AuthorizeResponse.builder()
+                    .userId(authorize.getUserId())
+                    .success(true)
+                    .txId(authorize.getTxId())
+                    .merchantTxId("111111111")
+                    .authCode(uuid.toString())
+                    .build();
         } else {
-
-            HttpHeaders headers = new HttpHeaders();
+   /*         HttpHeaders headers = new HttpHeaders();
             headers.add("status", "false");
             headers.add("errCode", "10001");
             headers.add("errMsg", "Authorize failed");
-            headers.add("authCode", uuid.toString());
-            responseEntity = new ResponseEntity(headers, HttpStatus.OK);
+            responseEntity = new ResponseEntity(headers, HttpStatus.OK);*/
+            authorizeResponse = AuthorizeResponse.builder()
+                    .success(false)
+                    .errCode(10001)
+                    .errMsg("Authorize failed")
+                    .build();
         }
-        return responseEntity;
+        return authorizeResponse;
     }
 
-    @PostMapping("/transfer")
-    public String transfer(Model model , @RequestBody Transfer transfer) {
-        //Transaction transaction = integrationService.getTransactionById(transfer.getTxId());
+    @RequestMapping(method = RequestMethod.POST, value = "/transfer")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public Boolean transfer(@RequestBody Transfer transfer) {
+        transaction = integrationService.getTransactionById(transfer.getTxId());
         transaction.setSuccess(true);
         transaction.setCurrentBalance(transaction.getAccount().getBalance());
         integrationService.saveTransaction(transaction);
 
         sumOfTxAmount += transaction.getTxAmount();
-        model.addAttribute("succeed",true);
-        return "index";
+
+        return true;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/cancel")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public String cancel(@RequestBody String h) {
+        /*Transaction transaction = integrationService.getTransactionById(transfer.getTxId());
+        transaction.setErrCode(111111);
+        transaction.setErrMsg("Transfer failed");
+        transaction.setSuccess(false);*/
+        return new String("Hello");
     }
 
     @GetMapping("/transactionsShow")
-    public ModelAndView transactionsShow(){
+    public ModelAndView transactionsShow() {
         List<Transaction> transactions = integrationService.getAllTransactionsByUserId("user_123");
 
         ModelAndView modelAndView = new ModelAndView("transactionList");
 
-        modelAndView.addObject("transactions",transactions);
-        modelAndView.addObject("firstName",integrationService.getUserById("user_123").getFirstName());
-        modelAndView.addObject("balance",integrationService.getAccountByUserId("user_123").getBalance());
+        modelAndView.addObject("transactions", transactions);
+        modelAndView.addObject("firstName", integrationService.getUserById("user_123").getFirstName());
+        modelAndView.addObject("balance", integrationService.getAccountByUserId("user_123").getBalance());
         return modelAndView;
-    }
-
-    @PostMapping("/cancel")
-    public void cancel(@RequestBody Transfer transfer) {
-        Transaction transaction = integrationService.getTransactionById(transfer.getTxId());
-        transaction.setErrCode(111111);
-        transaction.setErrMsg("Transfer failed");
-        transaction.setSuccess(false);
     }
 
 }

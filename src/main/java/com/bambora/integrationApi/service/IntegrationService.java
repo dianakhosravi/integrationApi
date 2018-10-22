@@ -76,6 +76,7 @@ public class IntegrationService {
                 .user(user)
                 .build();
         accountDao.save(account);
+/*
 
         double buy1= 50.00;
         double buy2= 60.00;
@@ -124,6 +125,7 @@ public class IntegrationService {
 
         accountDao.save(account);
 
+*/
     }
 
     public Transaction saveTransaction(Transaction transaction) {
