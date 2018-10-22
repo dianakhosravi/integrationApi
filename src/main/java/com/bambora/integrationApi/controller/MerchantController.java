@@ -51,6 +51,7 @@ public class MerchantController {
             headers.add("balanceCy", account.getBalanceCy());
             headers.add("local", user.getLocale());
             return new ResponseEntity(headers, HttpStatus.OK);
+
         }
         HttpHeaders headers = new HttpHeaders();
         headers.add("status", "false");
@@ -118,7 +119,7 @@ public class MerchantController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Boolean transfer(@RequestBody Transfer transfer) {
-        transaction = integrationService.getTransactionById(transfer.getTxId());
+        //transaction = integrationService.getTransactionById(transfer.getTxId());
         transaction.setSuccess(true);
         transaction.setCurrentBalance(transaction.getAccount().getBalance());
         integrationService.saveTransaction(transaction);
