@@ -31,6 +31,30 @@
 </script>
 <script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
 <script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
-
+<script>
+/*    function search_click() {
+        $("#results").empty();
+        $.ajax(
+            {
+                url: "http://localhost:8080/verifyuser",
+                method: "post",
+                data: {
+                    'userId': "user_123",
+                    'sessionId': "123"
+                },
+                success: function (data) {
+                    var ul = $(document.createElement("ul"));
+                    data.forEach(function (collection) {
+                        console.log(collection)
+                        ul.append("<li>" + collection.id + "</li>");
+                    })
+                    $("#results").append(ul);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+    }*/
+</script>
 </body>
 </html>

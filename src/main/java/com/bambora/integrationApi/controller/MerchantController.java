@@ -3,40 +3,37 @@ package com.bambora.integrationApi.controller;
 import com.bambora.integrationApi.model.*;
 import com.bambora.integrationApi.service.IntegrationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
-@Controller
+@RestController
 public class MerchantController {
 
     static Double sumOfTxAmount = 0.0;
+    static Set<Transaction> txId_list = new HashSet<>();
+
 
     @Autowired
     IntegrationService integrationService;
-    @Autowired
-    Transaction transaction;
 
-    @RequestMapping(method = RequestMethod.POST, value = "/verifyuser")
-    @ResponseStatus(HttpStatus.CREATED)
+    @RequestMapping(value = "/verifyuser", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity checkUser(@RequestParam String userId, @RequestParam String sessionId) {
+    public ResponseEntity<HttpHeaders> checkUser(@RequestBody UserRequest userRequest) {
 
-        Verify verify = integrationService.verify(sessionId, userId);
-
-        if (verify.getSuccess() == true) {
-            Account account = integrationService.getAccountByUserId(userId);
-            User user = account.getUser();
+        if (integrationService.verify(userRequest.getSessionId(), userRequest.getUserId())) {
+            User user = integrationService.getUserById(userRequest.getUserId());
+            Account account = integrationService.getAccountByUserId(userRequest.getUserId());
 
             HttpHeaders headers = new HttpHeaders();
             headers.add("userId", user.getUserId());
+            headers.add("success", "true");
             headers.add("userCat", user.getUserCat());
             headers.add("kycStatus;", user.getKycStatus());
             headers.add("firstName", user.getFirstName());
@@ -50,18 +47,17 @@ public class MerchantController {
             headers.add("balance", account.getBalance().toString());
             headers.add("balanceCy", account.getBalanceCy());
             headers.add("local", user.getLocale());
-            return new ResponseEntity(headers, HttpStatus.OK);
+            return ResponseEntity.ok(headers);
 
         }
         HttpHeaders headers = new HttpHeaders();
         headers.add("status", "false");
         headers.add("errCode", "123");
         headers.add("errMsg", "Unknown userId");
-        return new ResponseEntity(headers, HttpStatus.OK);
+        return ResponseEntity.ok(headers);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/authorize")
-    @ResponseStatus(HttpStatus.CREATED)
+    @RequestMapping(value = "/authorize", method = RequestMethod.POST)
     @ResponseBody
     public AuthorizeResponse authorize(@RequestBody Authorize authorize) {
         AuthorizeResponse authorizeResponse;
@@ -70,9 +66,10 @@ public class MerchantController {
 
         sumOfTxAmount += authorize.getTxAmount();
 
-        if (account.getBalance() - sumOfTxAmount >= 0) {
+        if ((account.getBalance() - sumOfTxAmount >= 0) &&
+                (authorize.getTxAmountCy().equalsIgnoreCase("SEK"))) {
 
-            transaction = Transaction.builder()
+            txId_list.add(Transaction.builder()
                     .account(account)
                     .authCode(uuid.toString())
                     .merchantTxId(111111111)
@@ -82,17 +79,8 @@ public class MerchantController {
                     .txId(authorize.getTxId())
                     .txTypeId(authorize.getTxTypeId())
                     .txTypeName(authorize.getTxTypeName())
-                    .build();
+                    .build());
 
-            //integrationService.saveTransaction(transaction);
-
-/*            HttpHeaders headers = new HttpHeaders();
-            headers.add("userId", authorize.getUserId());
-            headers.add("success", "true");
-            headers.add("txId", authorize.getTxId());
-            headers.add("merchantTxId", "111111111");
-            headers.add("authCode", uuid.toString());
-            responseEntity = new ResponseEntity(headers, HttpStatus.OK);*/
             authorizeResponse = AuthorizeResponse.builder()
                     .userId(authorize.getUserId())
                     .success(true)
@@ -101,11 +89,6 @@ public class MerchantController {
                     .authCode(uuid.toString())
                     .build();
         } else {
-   /*         HttpHeaders headers = new HttpHeaders();
-            headers.add("status", "false");
-            headers.add("errCode", "10001");
-            headers.add("errMsg", "Authorize failed");
-            responseEntity = new ResponseEntity(headers, HttpStatus.OK);*/
             authorizeResponse = AuthorizeResponse.builder()
                     .success(false)
                     .errCode(10001)
@@ -116,28 +99,32 @@ public class MerchantController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/transfer")
-    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Boolean transfer(@RequestBody Transfer transfer) {
-        //transaction = integrationService.getTransactionById(transfer.getTxId());
+    public Boolean transfer(@RequestParam String txId) {
+        Transaction transaction = txId_list.stream()
+                .filter(c -> c.getTxId().equalsIgnoreCase(txId))
+                .findAny().get();
+
         transaction.setSuccess(true);
         transaction.setCurrentBalance(transaction.getAccount().getBalance());
         integrationService.saveTransaction(transaction);
-
+        txId_list.remove(transaction);
         sumOfTxAmount += transaction.getTxAmount();
 
         return true;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/cancel")
-    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public String cancel(@RequestBody String h) {
-        /*Transaction transaction = integrationService.getTransactionById(transfer.getTxId());
-        transaction.setErrCode(111111);
-        transaction.setErrMsg("Transfer failed");
-        transaction.setSuccess(false);*/
-        return new String("Hello");
+    public ResponseEntity<HttpHeaders> cancel(@RequestParam String txId) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("user", "user_123");
+        headers.add("success", "false");
+        headers.add("errCode", "111111");
+        headers.add("errMsg", "Transfer failed");
+
+        return ResponseEntity.ok(headers);
     }
 
     @GetMapping("/transactionsShow")
@@ -151,5 +138,6 @@ public class MerchantController {
         modelAndView.addObject("balance", integrationService.getAccountByUserId("user_123").getBalance());
         return modelAndView;
     }
+
 
 }

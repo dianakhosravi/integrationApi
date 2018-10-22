@@ -13,8 +13,8 @@ import javax.persistence.ManyToOne;
 @Data
 @Builder
 @Entity
-@Component
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+/*@Component
+@Scope("prototype")*/
 public class Transaction {
 
     @ManyToOne
@@ -41,5 +41,8 @@ public class Transaction {
     private int txTypeId;
     private String txTypeName;
 
-
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

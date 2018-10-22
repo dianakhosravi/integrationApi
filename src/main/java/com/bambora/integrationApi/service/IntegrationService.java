@@ -21,16 +21,14 @@ public class IntegrationService {
     @Autowired
     TransactionDao transactionDao;
 
-    public Verify verify(String sessionId, String userId) {
+    public Boolean verify(String sessionId, String userId) {
         Optional<User> user = userDao.findAll().stream()
                 .filter(c -> c.getSessionId().equalsIgnoreCase(sessionId) && c.getUserId().equalsIgnoreCase(userId))
                 .findAny();
 
         return user.isPresent() ?
-                Verify.builder()
-                        .success(true)
-                        .build()
-                : Verify.builder().success(false).errCode(123).errMsg("Unknown userId").build();
+                true
+                : false;
     }
 
     public Account getAccountByUserId(String userId) {
